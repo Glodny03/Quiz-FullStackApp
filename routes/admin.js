@@ -1,17 +1,34 @@
-const express = require("express"),
-  {
-    NotExtended: NotExtended
-  } = require("http-errors"),
-  router = express.Router();
+const express = require('express');
+const News = require('../models/news');
 
-router.all("*", (req, res, next) => {
-    req.session.admin ? next() : res.redirect("login")
-  }),
+const router = express.Router();
 
-  router.get("/", (req, res) => {
-    console.log(req.session.admin), res.render("admin", {
-      title: "Admin"
-    })
-  }),
+router.all('*', (req, res, next) => {
+  if (!req.session.admin) {
+    res.redirect('login');
 
-  module.exports = router;
+    return;
+  }
+
+  next();
+});
+
+router.get('/', (req, res) => {
+
+  // const newsData = new News({
+  //   title: 'New title',
+  //   description: 'Optional description'
+  // })
+
+  // newsData.save((err) => console.log(`Error ${err}`));
+
+  res.render('admin/index', {
+    title: 'Admin'
+  });
+});
+
+router.get('/news/add', (req, res) => {
+
+})
+
+module.exports = router;
